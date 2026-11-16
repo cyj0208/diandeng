@@ -136,16 +136,27 @@ if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET)
 
 松手弹跳时那个高电平只存在几百纳秒，主循环采样不到，`t6_botton` 仍为 0，该边沿被拒绝，单击不会再误触发翻转。
 
-## 五、编译与下载
+## 五、运行环境要求
+
+| 项 | 要求 | 说明 |
+| --- | --- | --- |
+| Keil MDK | 5.x，编译器 **ARMCC V5（AC5）** | 工程按 AC5 配置（`uAC6 = 0`）。若本机只有 AC6，在 Options for Target → Target 里切到 v6 也能编译，HAL 代码兼容，可能有少量 warning |
+| 器件包 | `Keil.STM32F1xx_DFP` **2.4.0**、`ARM::CMSIS` **5.0.1** | CubeMX 生成的 Keil 工程依赖这两个 pack。版本不一致时 Keil 会提示 Migrate，按提示操作即可 |
+| 芯片 | STM32F103C8T6 | 64KB Flash / 20KB RAM |
+| **外部晶振** | **必须有 8MHz 晶振** | 两个工程都用 HSE 8MHz × 9 = 72MHz。**板上没有 8MHz 晶振会卡在 `Error_Handler()` 的死循环里，现象是灯全不亮、像没烧进去** |
+| 下载器 | ST-Link | 工程调试器已设为 ST-Link，Flash 算法配置随 `MDK-ARM/RTE` 一起提交 |
+
+## 六、编译与下载
 
 1. 用 Keil MDK 打开对应目录下的 `MDK-ARM/diandeng.uvprojx`
-2. Rebuild（F7），0 error 0 warning 后再下载（F8，ST-Link）
-3. 如需修改引脚或外设，用 STM32CubeMX 打开目录下的 `diandeng.ioc`
+2. **先 Rebuild（F7）**——仓库里没有提交编译产物，必须自己编一次，0 error 0 warning 后再下载
+3. 下载（F8，ST-Link）
+4. 如需修改引脚或外设，用 STM32CubeMX 打开目录下的 `diandeng.ioc`
 
 > 编译产物（`MDK-ARM/diandeng/`）和 Keil 的 `*.uvguix.*` 已加入 `.gitignore`，未提交。
-> `Drivers/CMSIS` 下的 DSP、NN、RTOS 等与本作业无关的大体积目录也已剔除。
+> `Drivers/CMSIS` 下的 DSP、NN、RTOS 等与本作业无关的大体积目录也已剔除，不影响编译。
 
-## 六、完成情况
+## 七、完成情况
 
 | 题号 | 状态 | 说明 |
 | --- | --- | --- |
