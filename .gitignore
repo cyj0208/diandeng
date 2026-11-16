@@ -1,7 +1,5 @@
-# Keil 编译产物
+# Keil 编译产物（RTE 和 DebugConfig 是工程配置，必须提交）
 **/MDK-ARM/diandeng/
-**/MDK-ARM/RTE/
-**/MDK-ARM/DebugConfig/
 *.uvguix.*
 *.o
 *.d
