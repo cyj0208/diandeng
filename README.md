@@ -22,6 +22,22 @@
 
 ## 三、各题实现
 
+### 题1：外接 LED 以 500ms 周期闪烁，可以使用 HAL_Delay
+
+用 `HAL_Delay` 做延时，亮 250ms、灭 250ms，一个完整周期 500ms：
+
+```c
+void lightupled1(void)                      /* 题1：允许使用 HAL_Delay */
+{
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);   /* 点亮 */
+    HAL_Delay(250);                                              /* 保持 250ms */
+    HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET); /* 熄灭 */
+    HAL_Delay(250);                                              /* 保持 250ms */
+}
+```
+
+在主循环里反复调用即可。题1 与题2 的差别只有这一个函数，因此仓库里没有再单独建第三个工程，题2 的两个工程分别给出了不用 `HAL_Delay` 的两种写法。
+
 ### 题2：外接 LED 以 500ms 周期闪烁，全程不使用 HAL_Delay 和 GetTick
 
 **`A_HAL_GetTick`** ——用 `HAL_GetTick()` 差值判断
@@ -34,6 +50,26 @@
 
 ### 题3：按键通过 EXTI 中断控制 LED 开关，软件消抖 20ms
 
+```c
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if ((HAL_GetTick() - presstime) < 20) { return; }     /* 20ms 软件消抖，抖动直接丢弃 */
+
+    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14) == GPIO_PIN_RESET)
+    {
+        flag = 1;
+    }
+
+    if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13) == GPIO_PIN_RESET)
+    {
+        flag = 2;
+        if (t6_botton) botton_press_ci++;
+    }
+
+    presstime = HAL_GetTick();
+}
+```
+
 ### 题5：按键短按（<1s）切换常亮/常灭，长按（≥1s）松手后进入 5Hz 快闪，再次长按退出
 
 - `interval < 1000ms` → 常亮/常灭切换
@@ -44,3 +80,15 @@
 - 第一次按下：记下时刻，计数置 1
 - 500ms 内再次按下：判定双击，翻转 LED2
 - 超过 500ms 未等到第二次：计数清零、退出该模式，单击不动作
+
+## 四、运行环境要求
+
+| 项 | 要求 | 说明 |
+| --- | --- | --- |
+| Keil MDK | 5.x，编译器 **ARMCC V5（AC5）** | 工程按 AC5 配置（`uAC6 = 0`）。若本机只有 AC6，在 Options for Target → Target 里切到 v6 也能编译，HAL 代码兼容，可能有少量 warning |
+| 器件包 | `Keil.STM32F1xx_DFP` **2.4.0**、`ARM::CMSIS` **5.0.1** | CubeMX 生成的 Keil 工程依赖这两个 pack，版本不一致时 Keil 会提示 Migrate，按提示操作即可 |
+| 芯片 | STM32F103C8T6 | 64KB Flash / 20KB RAM |
+| **外部晶振** | **必须有 8MHz 晶振** | 两个工程都用 HSE 8MHz × 9 = 72MHz。**板上没有 8MHz 晶振会卡在 `Error_Handler()` 的死循环里，现象是灯全不亮、像没烧进去** |
+| 下载器 | ST-Link | 工程调试器已设为 ST-Link，Flash 算法配置随 `MDK-ARM/RTE` 一起提交 |
+
+打开 `MDK-ARM/diandeng.uvprojx` 后**先 Rebuild（F7）再下载（F8）**，仓库里没有提交编译产物，必须自己编一次。
