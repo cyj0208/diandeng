@@ -66,6 +66,4 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 | 器件包      | `Keil.STM32F1xx_DFP` **2.4.0**、`ARM::CMSIS` **5.0.1** | CubeMX 生成的 Keil 工程依赖这两个 pack，版本不一致时 Keil 会提示 Migrate，按提示操作即可                                      |
 | 芯片       | STM32F103C8T6                                         | 64KB Flash / 20KB RAM                                                                             |
 | **外部晶振** | **必须有 8MHz 晶振**                                       | 两个工程都用 HSE 8MHz × 9 = 72MHz。                                                                      |
-| 下载器      | ST-Link                                               | 工程调试器已设为 ST-Link，Flash 算法配置随 `MDK-ARM/RTE` 一起提交                                                   |
 
-打开 `MDK-ARM/diandeng.uvprojx` 后**先 Rebuild（F7）再下载（F8）**，仓库里没有提交编译产物，必须自己编一次。
