@@ -1,0 +1,32 @@
+# Keil 编译产物
+**/MDK-ARM/diandeng/
+**/MDK-ARM/RTE/
+**/MDK-ARM/DebugConfig/
+*.uvguix.*
+*.o
+*.d
+*.crf
+*.axf
+*.hex
+*.map
+*.lst
+*.lnp
+*.dep
+*.htm
+*.iex
+*.sct
+
+# CubeMX / 系统杂项
+.mxproject
+**/.settings/
+.DS_Store
+Thumbs.db
+
+# 与本作业无关的大体积 CMSIS 目录
+**/Drivers/CMSIS/Lib/
+**/Drivers/CMSIS/DSP/
+**/Drivers/CMSIS/NN/
+**/Drivers/CMSIS/RTOS/
+**/Drivers/CMSIS/RTOS2/
+**/Drivers/CMSIS/Core_A/
+**/Drivers/CMSIS/docs/
