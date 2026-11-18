@@ -152,7 +152,8 @@ int main(void)
 		  {
 			    uint32_t uptime = HAL_GetTick();
 				uint32_t  interval=uptime-presstime;
-				if(interval<1000)
+				if(checkfast==1&&interval<1000){} //保证只有再次长按才能退出快闪
+			    else if(interval<1000)
 				{
 					checkfast =0;
 					led2_state = HAL_GPIO_ReadPin(LED2_GPIO_Port ,LED2_Pin);
