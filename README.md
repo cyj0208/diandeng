@@ -46,5 +46,3 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 - 500ms 内再次按下：即为双击，翻转 LED2
 - 超过 500ms 未等到第二次：计数清零、退出该模式
 
-                                                            |
-
